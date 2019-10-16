@@ -7,7 +7,7 @@
     </div>
     <div class="buttons is-centered">
       <button v-for="(letter, index) in letters" v-bind:key="index"
-         v-on:click="check(letter, index)" class="button">{{ letter }}</button>
+         v-on:click="check(letter, index)" class="button letters">{{ letter }}</button>
     </div>
     <div>
       <h2 class="subtitle">Il vous reste {{ lives }} essais.</h2>
@@ -38,19 +38,20 @@ export default {
     };
   },
   created() {
+    // get a random word from the word array defined above
     this.randomWord = this.words[Math.floor(Math.random() * this.words.length)];
     this.randomWordArray = this.randomWord.toLowerCase().split('');
   },
   methods: {
+    // checks if the letter clicked is in the hidden word or not and places it in the spaces if so
     check(letter, index) {
       const btnClicked = document.querySelectorAll('.button')[index];
       btnClicked.disabled = true;
       if (this.randomWordArray.includes(letter.toLowerCase())) {
         btnClicked.style.background = 'green';
-        const spaces = document.querySelectorAll('.column');
         for (let i = 0; i < this.randomWordArray.length; i += 1) {
           if (this.randomWordArray[i] === letter.toLowerCase()) {
-            spaces[i].innerHTML = letter;
+            document.querySelectorAll('.column')[i].innerHTML = letter;
           }
         }
       } else {
@@ -59,25 +60,19 @@ export default {
       }
       this.verifyState();
     },
+    // checks if the user ran out of lives or if the hidden word was found
     verifyState() {
       if (this.lives === 0) {
         this.disableButtons();
         document.querySelector('.result').innerHTML = `Vous avez perdu... Le mot était ${this.randomWord.toLowerCase()}.`;
-      } else {
-        let win = true;
-        document.querySelectorAll('.column').forEach((space) => {
-          if (space.innerHTML === '') {
-            win = false;
-          }
-        });
-        if (win) {
-          this.disableButtons();
-          document.querySelector('.result').innerHTML = 'Bravo! Vous avez gagné.';
-        }
+      } else if (!Array.from(document.querySelectorAll('.column')).some(space => space.innerHTML === '')) {
+        this.disableButtons();
+        document.querySelector('.result').innerHTML = 'Bravo! Vous avez gagné.';
       }
     },
+    // disables every button (used when the user wins or loses)
     disableButtons() {
-      document.querySelectorAll('.button').forEach((button) => {
+      document.querySelectorAll('.letters').forEach((button) => {
         button.disabled = true; // eslint-disable-line no-param-reassign
       });
     },
