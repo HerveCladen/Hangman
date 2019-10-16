@@ -2,12 +2,12 @@
   <div class="container">
     <h1 class="title">Jeu du pendu</h1>
     <h3 class="subtitle result"></h3>
-    <div class="columns is-centered">
+    <div class="columns is-mobile is-centered">
       <div class="column" v-for="(letter, index) in randomWordArray" v-bind:key="index"></div>
     </div>
     <div class="buttons is-centered">
       <button v-for="(letter, index) in letters" v-bind:key="index"
-         v-on:click="check(letter, index)" class="button letters">{{ letter }}</button>
+         v-on:click="check(letter, index)" class="button letter">{{ letter }}</button>
     </div>
     <div>
       <h2 class="subtitle">Il vous reste {{ lives }} essais.</h2>
@@ -45,7 +45,7 @@ export default {
   methods: {
     // checks if the letter clicked is in the hidden word or not and places it in the spaces if so
     check(letter, index) {
-      const btnClicked = document.querySelectorAll('.button')[index];
+      const btnClicked = document.querySelectorAll('.letter')[index];
       btnClicked.disabled = true;
       if (this.randomWordArray.includes(letter.toLowerCase())) {
         btnClicked.style.background = 'green';
@@ -72,7 +72,7 @@ export default {
     },
     // disables every button (used when the user wins or loses)
     disableButtons() {
-      document.querySelectorAll('.letters').forEach((button) => {
+      document.querySelectorAll('.letter').forEach((button) => {
         button.disabled = true; // eslint-disable-line no-param-reassign
       });
     },
